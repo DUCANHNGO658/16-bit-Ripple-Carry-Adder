@@ -1,0 +1,22 @@
+`timescale 1ns / 1ps
+module Ripple_Carry_Ahead_Adder_16_bits(
+input [15:0] A,
+input [15:0] B,
+input cin,
+output cout,
+output [15:0] Sum
+  );
+wire [15:0] carry;
+//Smallest FA so we cin the value
+FullAdder A0(
+.A(A[0]),.B(B[0]),.cin(cin),.cout(carry[0]),.sum(Sum[0])
+ );   
+genvar i;
+generate
+for(i =1; i<16; i=i+1) begin : adder_block
+FullAdder FA(
+.A(A[i]),. B(B[i]),. cin(carry[i-1]),. cout(carry[i]),.sum(Sum[i]));
+end
+endgenerate
+assign cout = carry[15];
+endmodule
